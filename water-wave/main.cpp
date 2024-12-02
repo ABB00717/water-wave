@@ -80,6 +80,7 @@ int main() {
 
     // 啟動著色器並綁定紋理
     ourShader.use();
+    ourShader.setFloat("time", currentFrame);
     // ourShader.setInt("texture1", 0);
 
     glm::mat4 view = camera.GetViewMatrix();
