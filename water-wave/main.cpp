@@ -7,36 +7,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <GLFW/glfw3.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include "Shader.h"
 #include "Camera.h"
-
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800;
-std::vector<float> vertices = {};
-std::vector<unsigned int> indices = {};
-int gridSize = 100;
-float spacing = 0.1f;
-
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-bool firstMouse = true;
-float fov = 45.0f;
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-float lastX = SCREEN_WIDTH/2, lastY = SCREEN_HEIGHT/2;
-const int MAX_VERTICES = 10;
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
-void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void generateTexture(unsigned int* texture, const char* imgPath);
-void generateGrid(std::vector<float>& vertices, std::vector<unsigned int>& indices, int gridSize, float spacing);
+#include "Constants.h"
+#include "Callbacks.h"
+#include "Generates.h"
 
 int main() {
   // Init GLFW
@@ -50,8 +25,8 @@ int main() {
   if (window==nullptr) return -1;
   glfwMakeContextCurrent(window);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-  glfwSetCursorPosCallback(window, mouse_callback);
-  glfwSetScrollCallback(window, scroll_callback);
+  glfwSetCursorPosCallback(window, mouseCallback);
+  glfwSetScrollCallback(window, scrollCallback);
 
   // Init Glad
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) return false;
@@ -130,100 +105,4 @@ int main() {
 
   glfwTerminate();
   return 0;
-}
-
-void frameBufferSizeCallback(GLFWwindow* window, int width, int height) {
-  glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE)==GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-  if (glfwGetKey(window, GLFW_KEY_W)==GLFW_PRESS)
-    camera.ProcessKeyboard(FORWARD, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_S)==GLFW_PRESS)
-    camera.ProcessKeyboard(BACKWARD, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_A)==GLFW_PRESS)
-    camera.ProcessKeyboard(LEFT, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_D)==GLFW_PRESS)
-    camera.ProcessKeyboard(RIGHT, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_SPACE)==GLFW_PRESS)
-    camera.ProcessKeyboard(UP, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)==GLFW_PRESS)
-    camera.ProcessKeyboard(DOWN, deltaTime);
-}
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
-  float xpos = static_cast<float>(xposIn);
-  float ypos = static_cast<float>(yposIn);
-
-  if (firstMouse) {
-    lastX = xpos;
-    lastY = ypos;
-    firstMouse = false;
-  }
-
-  float xoffset = xpos-lastX;
-  float yoffset = lastY-ypos; // reversed since y-coordinates go from bottom to top
-
-  lastX = xpos;
-  lastY = ypos;
-
-  camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-  camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
-void generateTexture(unsigned int* texture, const char* imgPath) {
-  // 讀取圖片
-  // xstbi_set_flip_vertically_on_load(true);
-  int width, height, nrChannels;
-  unsigned char* data = stbi_load(imgPath, &width, &height, &nrChannels, 0);
-  // 生成紋理以及Mipmap
-  glGenTextures(1, texture);
-  glBindTexture(GL_TEXTURE_2D, *texture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  // 載入紋理
-  if (data) {
-    if (nrChannels==4)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    else if (nrChannels==3)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  } else {
-    std::cout<<"Failed to load texture"<<std::endl;
-  }
-  stbi_image_free(data);
-}
-
-void generateGrid(std::vector<float>& vertices, std::vector<unsigned int>& indices, int gridSize, float spacing) {
-  for (int z = 0; z<=gridSize; ++z) {
-    for (int x = 0; x<=gridSize; ++x) {
-      vertices.push_back(x*spacing);                // x
-      vertices.push_back(0.0f);                       // y
-      vertices.push_back(z*spacing);                // z
-      vertices.push_back(x/(float)gridSize);        // Texture u
-      vertices.push_back(z/(float)gridSize);        // Texture v
-    }
-  }
-  for (int z = 0; z<gridSize; ++z) {
-    for (int x = 0; x<gridSize; ++x) {
-      int topLeft = z*(gridSize+1)+x;
-      int topRight = topLeft+1;
-      int bottomLeft = (z+1)*(gridSize+1)+x;
-      int bottomRight = bottomLeft+1;
-      indices.push_back(topLeft);
-      indices.push_back(bottomLeft);
-      indices.push_back(topRight);
-      indices.push_back(topRight);
-      indices.push_back(bottomLeft);
-      indices.push_back(bottomRight);
-    }
-  }
 }

@@ -127,6 +127,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Callbacks.cpp" />
+    <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="Generates.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
@@ -135,7 +138,10 @@
     <None Include="shader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Callbacks.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Generates.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
