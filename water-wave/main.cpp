@@ -1,6 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include <direct.h>
+#include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,14 +15,10 @@
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
-float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-};
+std::vector<float> vertices = {};
+std::vector<unsigned int> indices = {};
+int gridSize = 100;
+float spacing = 0.1f;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -31,6 +28,7 @@ float fov = 45.0f;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float lastX = SCREEN_WIDTH/2, lastY = SCREEN_HEIGHT/2;
+const int MAX_VERTICES = 10;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -38,6 +36,7 @@ void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void generateTexture(unsigned int* texture, const char* imgPath);
+void generateGrid(std::vector<float>& vertices, std::vector<unsigned int>& indices, int gridSize, float spacing);
 
 int main() {
   // Init GLFW
@@ -59,24 +58,32 @@ int main() {
 
   Shader ourShader("./shader.vs", "./shader.fs");
 
-  unsigned int texture1;
-  generateTexture(&texture1, "./container.jpg");
+  // unsigned int texture1;
+  // generateTexture(&texture1, "./container.jpg");
 
-  // 綁定 VBO, VAO
-  unsigned int VBO, VAO;
+  generateGrid(vertices, indices, gridSize, spacing);
+
+  // 綁定 VBO, VAO, EBO
+  unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.data(), GL_STATIC_DRAW);
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
 
   // 告訴OpenGL如何解析頂點數據
   // 位置屬性
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
-  // 紋理坐標屬性
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
   glEnableVertexAttribArray(1);
+  // 紋理坐標屬性
+  // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
+  // glEnableVertexAttribArray(1);
 
   // 解綁 VBO, VAO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -92,13 +99,13 @@ int main() {
     processInput(window); // 檢查是否按下ESC
 
     // 渲染指令
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 設定清除顏色
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
     // 啟動著色器並綁定紋理
     ourShader.use();
-    ourShader.setInt("texture1", 0);
+    // ourShader.setInt("texture1", 0);
 
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
@@ -110,12 +117,12 @@ int main() {
 
     // 繪製物件
     glEnable(GL_DEPTH_TEST);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    // glActiveTexture(GL_TEXTURE0);
+    // glBindTexture(GL_TEXTURE_2D, texture1);
     glBindVertexArray(VAO);
     glm::mat4 model = glm::mat4(1.0f);
     ourShader.setMat4("model", model);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
     glfwSwapBuffers(window); // 雙緩衝區交換
     glfwPollEvents(); // 檢查有沒有觸發事件
@@ -193,4 +200,30 @@ void generateTexture(unsigned int* texture, const char* imgPath) {
     std::cout<<"Failed to load texture"<<std::endl;
   }
   stbi_image_free(data);
+}
+
+void generateGrid(std::vector<float>& vertices, std::vector<unsigned int>& indices, int gridSize, float spacing) {
+  for (int z = 0; z<=gridSize; ++z) {
+    for (int x = 0; x<=gridSize; ++x) {
+      vertices.push_back(x*spacing);                // x
+      vertices.push_back(0.0f);                       // y
+      vertices.push_back(z*spacing);                // z
+      vertices.push_back(x/(float)gridSize);        // Texture u
+      vertices.push_back(z/(float)gridSize);        // Texture v
+    }
+  }
+  for (int z = 0; z<gridSize; ++z) {
+    for (int x = 0; x<gridSize; ++x) {
+      int topLeft = z*(gridSize+1)+x;
+      int topRight = topLeft+1;
+      int bottomLeft = (z+1)*(gridSize+1)+x;
+      int bottomRight = bottomLeft+1;
+      indices.push_back(topLeft);
+      indices.push_back(bottomLeft);
+      indices.push_back(topRight);
+      indices.push_back(topRight);
+      indices.push_back(bottomLeft);
+      indices.push_back(bottomRight);
+    }
+  }
 }
