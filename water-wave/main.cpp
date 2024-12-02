@@ -7,6 +7,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <GLFW/glfw3.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include "Shader.h"
 #include "Camera.h"
 #include "Constants.h"
@@ -63,6 +66,13 @@ int main() {
   // 解綁 VBO, VAO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO(); (void)io;
+  ImGui::StyleColorsDark();
+  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplOpenGL3_Init("#version 330");
+
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // 設定視口大小
   glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback); // 設定視窗大小改變時的callback
   while (!glfwWindowShouldClose(window)) {
@@ -72,6 +82,9 @@ int main() {
     lastFrame = currentFrame;
 
     processInput(window); // 檢查是否按下ESC
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 
     // 渲染指令
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
@@ -100,10 +113,21 @@ int main() {
     ourShader.setMat4("model", model);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
+    // ImGui
+    ImGui::Begin("Settings");
+    ImGui::Text("Hello, world!");
+    ImGui::End();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     glfwSwapBuffers(window); // 雙緩衝區交換
     glfwPollEvents(); // 檢查有沒有觸發事件
   }
 
   glfwTerminate();
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
   return 0;
 }

@@ -2,11 +2,25 @@
 #include "Constants.h"
 #include "Camera.h"
 
+bool cursorEnabled = true;
+
 void frameBufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
 void processInput(GLFWwindow* window) {
+  if (glfwGetKey(window, GLFW_KEY_LEFT_ALT)==GLFW_PRESS) {
+    if (cursorEnabled) {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      cursorEnabled = false;
+    }
+  } else {
+    if (!cursorEnabled) {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+      cursorEnabled = true;
+    }
+  }
+
   if (glfwGetKey(window, GLFW_KEY_ESCAPE)==GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
   if (glfwGetKey(window, GLFW_KEY_W)==GLFW_PRESS)
@@ -23,7 +37,10 @@ void processInput(GLFWwindow* window) {
     camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
+
 void mouseCallback(GLFWwindow* window, double xposIn, double yposIn) {
+  if (!cursorEnabled) return; // 如果游标未捕获，直接返回
+
   float xpos = static_cast<float>(xposIn);
   float ypos = static_cast<float>(yposIn);
 
