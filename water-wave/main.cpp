@@ -52,7 +52,7 @@ int main() {
 
   // 告訴OpenGL如何解析頂點數據
   // 位置屬性
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
   // 解綁 VBO, VAO
   glBindBuffer(GL_ARRAY_BUFFER, 0);

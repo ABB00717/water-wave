@@ -34,8 +34,6 @@ void generateGrid(std::vector<float>& vertices, std::vector<unsigned int>& indic
       vertices.push_back(x*spacing);                // x
       vertices.push_back(0.0f);                     // y
       vertices.push_back(z*spacing);                // z
-      vertices.push_back(x/(float)gridSize);        // Texture u
-      vertices.push_back(z/(float)gridSize);        // Texture v
     }
   }
   for (int z = 0; z<gridSize; ++z) {
