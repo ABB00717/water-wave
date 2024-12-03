@@ -14,11 +14,15 @@ void main() {
     float amplitude = 0.01;    // 波浪高度
     float frequency = 30.0;    // 波浪頻率
     float speed = 2.0;         // 波浪移動速度
-    
-    // 動態修改頂點的 y 坐標
+
     vec3 modifiedPos = aPos;
-    // modifiedPos.y += amplitude * sin(frequency * aPos.z + speed * time);
-    modifiedPos.y += amplitude * sin(frequency * (aPos.z + aPos.x) + speed * time);
+
+    // 計算方向角與動態因子
+    float angle = atan(aPos.z, aPos.x);  // 計算方向角
+    float directionFactor = sin(angle + time); // 隨時間變化的方向因子
+
+    // 使用梯度場影響波浪
+    modifiedPos.y += amplitude * sin(frequency * (aPos.x + aPos.z) + speed * time * directionFactor);
 
     // 設置最終頂點位置
     gl_Position = projection * view * model * vec4(modifiedPos, 1.0);
