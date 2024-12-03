@@ -34,10 +34,7 @@ int main() {
   // Init Glad
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) return false;
 
-  Shader ourShader("./shader.vs", "./shader.fs");
-
-  // unsigned int texture1;
-  // generateTexture(&texture1, "./container.jpg");
+  Shader oceanShader("./ocean.vs", "./ocean.fs");
 
   generateGrid(vertices, indices, gridSize, spacing);
 
@@ -57,12 +54,6 @@ int main() {
   // 位置屬性
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-  glEnableVertexAttribArray(1);
-  // 紋理坐標屬性
-  // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-  // glEnableVertexAttribArray(1);
-
   // 解綁 VBO, VAO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -92,25 +83,22 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
     // 啟動著色器並綁定紋理
-    ourShader.use();
-    ourShader.setFloat("time", currentFrame);
-    // ourShader.setInt("texture1", 0);
+    oceanShader.use();
+    oceanShader.setFloat("time", currentFrame);
 
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
-    unsigned int viewLoc = glGetUniformLocation(ourShader.ID, "view");
-    unsigned int projectionLoc = glGetUniformLocation(ourShader.ID, "projection");
-    ourShader.setMat4("view", view);
-    ourShader.setMat4("projection", projection);
+    unsigned int viewLoc = glGetUniformLocation(oceanShader.ID, "view");
+    unsigned int projectionLoc = glGetUniformLocation(oceanShader.ID, "projection");
+    oceanShader.setMat4("view", view);
+    oceanShader.setMat4("projection", projection);
 
-    // 繪製物件
+    // 繪製海洋
     glEnable(GL_DEPTH_TEST);
-    // glActiveTexture(GL_TEXTURE0);
-    // glBindTexture(GL_TEXTURE_2D, texture1);
     glBindVertexArray(VAO);
     glm::mat4 model = glm::mat4(1.0f);
-    ourShader.setMat4("model", model);
+    oceanShader.setMat4("model", model);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
     // ImGui

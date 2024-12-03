@@ -134,8 +134,8 @@
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.fs" />
-    <None Include="shader.vs" />
+    <None Include="ocean.fs" />
+    <None Include="ocean.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Callbacks.h" />
