@@ -134,6 +134,8 @@
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="light.fs" />
+    <None Include="light.vs" />
     <None Include="ocean.fs" />
     <None Include="ocean.vs" />
   </ItemGroup>

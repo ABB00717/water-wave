@@ -1,6 +1,9 @@
 #version 330 core
 out vec4 FragColor;  
 
+uniform vec4 oceanColor;
+uniform vec4 lightColor;
+
 void main() {
-  FragColor = vec4(0.43f, 0.82f, 1.0f, 1.0f);
+  FragColor = lightColor * oceanColor;
 }

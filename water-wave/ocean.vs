@@ -1,7 +1,6 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 
-uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform float time;
@@ -9,7 +8,7 @@ uniform float time;
 void main() {
     // 波浪參數
     float amplitude = 0.01;    // 波浪高度
-    float frequency = 30.0;    // 波浪頻率
+    float frequency = 3.0;    // 波浪頻率
     float speed = 2.0;         // 波浪移動速度
 
     vec3 modifiedPos = aPos;
@@ -22,5 +21,5 @@ void main() {
     modifiedPos.y += amplitude * sin(frequency * (aPos.x + aPos.z) + speed * time * directionFactor);
 
     // 設置最終頂點位置
-    gl_Position = projection * view * model * vec4(modifiedPos, 1.0);
+    gl_Position = projection * view * vec4(modifiedPos, 1.0);
 }

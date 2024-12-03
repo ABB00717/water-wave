@@ -41,6 +41,12 @@
     <None Include="ocean.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="light.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="light.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

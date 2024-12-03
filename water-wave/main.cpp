@@ -34,6 +34,7 @@ int main() {
   // Init Glad
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) return false;
 
+  Shader lightShader("./light.vs", "./light.fs");
   Shader oceanShader("./ocean.vs", "./ocean.fs");
 
   generateGrid(vertices, indices, gridSize, spacing);
@@ -47,15 +48,23 @@ int main() {
   glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.data(), GL_STATIC_DRAW);
   glGenBuffers(1, &EBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-
-
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int), indices.data(), GL_STREAM_DRAW);
   // 告訴OpenGL如何解析頂點數據
-  // 位置屬性
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
-  // 解綁 VBO, VAO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+
+  unsigned int lightVAO, lightVBO;
+  glGenVertexArrays(1, &lightVAO);
+  glBindVertexArray(lightVAO);
+  glGenBuffers(1, &lightVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
+  glBufferData(GL_ARRAY_BUFFER, lightCubeVertices.size()*sizeof(float), lightCubeVertices.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -82,9 +91,11 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 設定清除顏色
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
-    // 啟動著色器並綁定紋理
+    //// 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
+    oceanShader.setVec4("lightColor", glm::vec4(1.0f));
+    oceanShader.setVec4("oceanColor", glm::vec4(0.43f, 0.82f, 1.0f, 1.0f));
 
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
@@ -97,9 +108,19 @@ int main() {
     // 繪製海洋
     glEnable(GL_DEPTH_TEST);
     glBindVertexArray(VAO);
-    glm::mat4 model = glm::mat4(1.0f);
-    oceanShader.setMat4("model", model);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+    // 繪製光源
+    lightShader.use();
+    glm::mat4 lightModel = glm::mat4(1.0f); // 初始化單位矩陣
+    lightModel = glm::translate(lightModel, glm::vec3(5.0f, 1.0f, 5.0f)); // 平移到 (5.0f, 10.0f, 5.0f)
+    lightModel = glm::scale(lightModel, glm::vec3(0.2f)); // 可選：縮小光源以區分光源立方體
+    lightShader.setMat4("model", lightModel);
+
+    lightShader.setMat4("view", view);
+    lightShader.setMat4("projection", projection);
+    glBindVertexArray(lightVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // ImGui
     ImGui::Begin("Settings");
