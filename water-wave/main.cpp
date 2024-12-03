@@ -91,7 +91,7 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 設定清除顏色
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
-    //// 啟動著色器並綁定紋理
+    // 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
