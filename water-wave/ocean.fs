@@ -5,5 +5,8 @@ uniform vec4 oceanColor;
 uniform vec4 lightColor;
 
 void main() {
-  FragColor = lightColor * oceanColor;
+  float ambientStrength = 0.1;
+  vec4 ambient = ambientStrength * lightColor;
+
+  FragColor = ambient * oceanColor;
 }
