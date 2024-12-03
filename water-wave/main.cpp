@@ -87,7 +87,7 @@ int main() {
     ImGui::NewFrame();
 
     // 渲染指令
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 設定清除顏色
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
