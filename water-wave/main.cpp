@@ -98,7 +98,6 @@ int main() {
     oceanShader.setVec4("oceanColor", glm::vec4(0.43f, 0.82f, 1.0f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
     oceanShader.setVec3("viewPos", camera.Position);
-
     unsigned int viewLoc = glGetUniformLocation(oceanShader.ID, "view");
     unsigned int projectionLoc = glGetUniformLocation(oceanShader.ID, "projection");
     oceanShader.setMat4("view", view);
@@ -115,7 +114,6 @@ int main() {
     lightModel = glm::translate(lightModel, glm::vec3(0.0f, 5.0f, 0.0f)); // 平移到 (5.0f, 10.0f, 5.0f)
     lightModel = glm::scale(lightModel, glm::vec3(0.2f)); // 可選：縮小光源以區分光源立方體
     lightShader.setMat4("model", lightModel);
-
     lightShader.setMat4("view", view);
     lightShader.setMat4("projection", projection);
     glBindVertexArray(lightVAO);

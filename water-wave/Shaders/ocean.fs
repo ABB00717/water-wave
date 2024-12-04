@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec3 FragPos;
 in vec3 FragNormal;
 
+uniform samplerCube skybox;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform vec4 oceanColor;
@@ -24,8 +25,10 @@ void main() {
     // 鏡面反射
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+    float spec = 0.4 * pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
     vec4 specular = spec * lightColor;
 
-    FragColor = (ambient + diffuse + specular) * oceanColor;
+    vec3 I = normalize(FragPos - viewPos);
+    vec3 R = reflect(I, normalize(FragNormal));
+    FragColor = mix(vec4(texture(skybox, R).rgb, 1.0), (ambient + diffuse + specular) * oceanColor, 0.3);
 }
