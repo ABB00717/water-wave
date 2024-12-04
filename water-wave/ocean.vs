@@ -6,6 +6,7 @@ uniform mat4 projection;
 uniform float time;
 uniform float waveLength;
 uniform float waveHeight;
+uniform float speed;
 
 out vec3 FragPos;
 out vec3 FragNormal;
@@ -14,7 +15,7 @@ void main() {
     float f = 2 * 3.1415926 / waveLength;
 
     vec3 modifiedPos = aPos;
-    modifiedPos.y = waveHeight * sin(f * modifiedPos.x);
+    modifiedPos.y = waveHeight * sin(f * (modifiedPos.x - speed * time));
 
     vec3 normal = normalize(vec3(0.0, 1.0, 0.0));
     FragNormal = normal;
