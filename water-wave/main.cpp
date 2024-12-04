@@ -73,6 +73,7 @@ int main() {
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 330");
 
+  float waveLength = 10.0f;
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // 設定視口大小
   glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback); // 設定視窗大小改變時的callback
   while (!glfwWindowShouldClose(window)) {
@@ -80,16 +81,6 @@ int main() {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame-lastFrame;
     lastFrame = currentFrame;
-
-    processInput(window); // 檢查是否按下ESC
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    ImGui::Begin("Settings");
-    ImGui::Text("Hello, world!");
-    ImGui::End();
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // 渲染指令
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
@@ -99,7 +90,7 @@ int main() {
     // 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
-    oceanShader.setFloat("waveLength", 10.0f);
+    oceanShader.setFloat("waveLength", waveLength);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
     oceanShader.setVec4("oceanColor", glm::vec4(0.30f, 0.51f, 0.66f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
@@ -129,6 +120,16 @@ int main() {
     lightShader.setMat4("projection", projection);
     glBindVertexArray(lightVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    processInput(window); // 檢查是否按下ESC
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("Settings");
+    ImGui::SliderFloat("Wave Length", &waveLength, 0.01f, 20.0f);
+    ImGui::End();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     
     glfwSwapBuffers(window); // 雙緩衝區交換
     glfwPollEvents(); // 檢查有沒有觸發事件
