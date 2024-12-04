@@ -5,17 +5,29 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform float time;
 
+out vec3 FragPos;
+out vec3 FragNormal;
+
 void main() {
-    // 波浪參數
-    float amplitude = 0.1;    // 波浪高度
-    float frequency = 3.0;    // 波浪頻率
-    float speed = 2.0;        // 波浪移動速度
+    float amplitude = 0.1;
+    float frequency = 3.0;
+    float speed = 2.0;
 
     vec3 modifiedPos = aPos;
+    float waveArg = (frequency * (aPos.x + aPos.z) + speed * time);
+    float waveArgHehe = (frequency * (aPos.x) + speed * time);
 
-    // 使用梯度場影響波浪
-    modifiedPos.y += amplitude * sin(frequency * (aPos.x + aPos.z) + speed * time);
+    // modifiedPos.y += amplitude * sin(waveArg);
+    // float dYdx = amplitude * frequency * cos(waveArg);
+    // float dYdz = amplitude * frequency * cos(waveArg);
 
-    // 設置最終頂點位置
+    modifiedPos.y += amplitude * sin(waveArgHehe);
+    float dYdx = amplitude * frequency * cos(waveArgHehe);
+    float dYdz = amplitude * frequency * cos(waveArgHehe);
+
+    vec3 normal = normalize(vec3(-dYdx, 1.0, -dYdz));
+
+    FragNormal = normal;
+    FragPos = modifiedPos;
     gl_Position = projection * view * vec4(modifiedPos, 1.0);
 }

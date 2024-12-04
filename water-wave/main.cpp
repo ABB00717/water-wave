@@ -96,6 +96,8 @@ int main() {
     oceanShader.setFloat("time", currentFrame);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
     oceanShader.setVec4("oceanColor", glm::vec4(0.43f, 0.82f, 1.0f, 1.0f));
+    oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
+    oceanShader.setVec3("viewPos", camera.Position);
 
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
@@ -113,7 +115,7 @@ int main() {
     // 繪製光源
     lightShader.use();
     glm::mat4 lightModel = glm::mat4(1.0f); // 初始化單位矩陣
-    lightModel = glm::translate(lightModel, glm::vec3(5.0f, 1.0f, 5.0f)); // 平移到 (5.0f, 10.0f, 5.0f)
+    lightModel = glm::translate(lightModel, glm::vec3(0.0f, 5.0f, 0.0f)); // 平移到 (5.0f, 10.0f, 5.0f)
     lightModel = glm::scale(lightModel, glm::vec3(0.2f)); // 可選：縮小光源以區分光源立方體
     lightShader.setMat4("model", lightModel);
 
@@ -123,9 +125,9 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // ImGui
-    ImGui::Begin("Settings");
-    ImGui::Text("Hello, world!");
-    ImGui::End();
+    //ImGui::Begin("Settings");
+    //ImGui::Text("Hello, world!");
+    //ImGui::End();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
