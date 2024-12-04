@@ -28,7 +28,17 @@ void main() {
     float spec = 0.4 * pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
     vec4 specular = spec * lightColor;
 
+    // 折射
+    float ratio = 1.00 / 1.33; // 空氣到水的折射率
     vec3 I = normalize(FragPos - viewPos);
-    vec3 R = reflect(I, normalize(FragNormal));
-    FragColor = mix(vec4(texture(skybox, R).rgb, 1.0), (ambient + diffuse + specular) * oceanColor, 0.3);
+    vec3 refractDir = refract(I, norm, ratio); // 計算折射方向
+    vec4 refractedColor = vec4(texture(skybox, refractDir).rgb, 1.0);
+
+    // 結合反射與折射
+    vec3 R = reflect(I, norm);
+    vec4 reflectedColor = vec4(texture(skybox, R).rgb, 1.0);
+
+    // 混合折射、反射與光照
+    vec4 baseColor = ambient + diffuse + specular;
+    FragColor = mix(refractedColor, reflectedColor, 0.7) * oceanColor * 0.7 + baseColor * 0.3;
 }
