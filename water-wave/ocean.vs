@@ -5,7 +5,6 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform float time;
 uniform float waveLength;
-uniform float speed;
 uniform float steepness;
 
 out vec3 FragPos;
@@ -13,7 +12,8 @@ out vec3 FragNormal;
 
 void main() {
     float k = 2 * 3.1415926 / waveLength;
-    float f = k * (aPos.x - speed * time);
+    float c = sqrt(9.8 / k);
+    float f = k * (aPos.x - c * time);
     float a = steepness / k;
 
     vec3 modifiedPos = aPos;
