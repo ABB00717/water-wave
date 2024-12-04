@@ -85,6 +85,11 @@ int main() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGui::Begin("Settings");
+    ImGui::Text("Hello, world!");
+    ImGui::End();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // 渲染指令
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
@@ -123,15 +128,7 @@ int main() {
     lightShader.setMat4("projection", projection);
     glBindVertexArray(lightVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // ImGui
-    //ImGui::Begin("Settings");
-    //ImGui::Text("Hello, world!");
-    //ImGui::End();
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+    
     glfwSwapBuffers(window); // 雙緩衝區交換
     glfwPollEvents(); // 檢查有沒有觸發事件
   }
