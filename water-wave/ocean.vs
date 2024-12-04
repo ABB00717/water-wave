@@ -12,12 +12,14 @@ out vec3 FragPos;
 out vec3 FragNormal;
 
 void main() {
-    float f = 2 * 3.1415926 / waveLength;
+    float k = 2 * 3.1415926 / waveLength;
+    float f = k * (aPos.x - speed * time);
 
     vec3 modifiedPos = aPos;
-    modifiedPos.y = waveHeight * sin(f * (modifiedPos.x - speed * time));
+    modifiedPos.y = waveHeight * sin(f);
 
-    vec3 normal = normalize(vec3(0.0, 1.0, 0.0));
+    vec3 tangent = normalize(vec3(1.0, waveHeight * cos(f), 0.0));
+    vec3 normal = vec3(-tangent.y, tangent.x, 0.0);
     FragNormal = normal;
     FragPos = modifiedPos;
     gl_Position = projection * view * vec4(modifiedPos, 1.0);
