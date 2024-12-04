@@ -74,6 +74,7 @@ int main() {
   ImGui_ImplOpenGL3_Init("#version 330");
 
   float waveLength = 10.0f, steepness = 0.5f;
+  glm::vec2 waveDirection = glm::vec2(1.0f, 0.0f);
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // 設定視口大小
   glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback); // 設定視窗大小改變時的callback
   while (!glfwWindowShouldClose(window)) {
@@ -92,6 +93,7 @@ int main() {
     oceanShader.setFloat("time", currentFrame);
     oceanShader.setFloat("waveLength", waveLength);
     oceanShader.setFloat("steepness", steepness);
+    oceanShader.setVec2("waveDirection", waveDirection);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
     oceanShader.setVec4("oceanColor", glm::vec4(0.30f, 0.51f, 0.66f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
@@ -129,6 +131,8 @@ int main() {
     ImGui::Begin("Settings");
     ImGui::SliderFloat("Wave Length", &waveLength, 0.5f, 20.0f);
     ImGui::SliderFloat("Steepness", &steepness, 0.01f, 1.0f);
+    ImGui::SliderFloat("Wave Direction X", &waveDirection.x, -1.0f, 1.0f);
+    ImGui::SliderFloat("Wave Direction Y", &waveDirection.y, -1.0f, 1.0f);
     ImGui::End();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
