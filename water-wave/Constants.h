@@ -12,6 +12,7 @@ extern const int SCREEN_HEIGHT;
 extern std::vector<float> vertices;
 extern std::vector<unsigned int> indices;
 extern std::vector<float> lightCubeVertices;
+extern std::vector<float> skyboxVertices;
 extern int gridSize;
 extern float spacing;
 

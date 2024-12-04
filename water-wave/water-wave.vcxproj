@@ -134,17 +134,27 @@
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="light.fs" />
-    <None Include="light.vs" />
-    <None Include="ocean.fs" />
-    <None Include="ocean.vs" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Callbacks.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Generates.h" />
     <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icebergs\back.jpg" />
+    <Image Include="icebergs\bottom.jpg" />
+    <Image Include="icebergs\front.jpg" />
+    <Image Include="icebergs\left.jpg" />
+    <Image Include="icebergs\right.jpg" />
+    <Image Include="icebergs\top.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\light.fs" />
+    <None Include="Shaders\light.vs" />
+    <None Include="Shaders\ocean.fs" />
+    <None Include="Shaders\ocean.vs" />
+    <None Include="Shaders\skybox.fs" />
+    <None Include="Shaders\skybox.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

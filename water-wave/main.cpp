@@ -34,9 +34,23 @@ int main() {
   // Init Glad
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) return false;
 
-  Shader lightShader("./light.vs", "./light.fs");
-  Shader oceanShader("./ocean.vs", "./ocean.fs");
+  Shader lightShader("./Shaders/light.vs", "./Shaders/light.fs");
+  Shader oceanShader("./Shaders/ocean.vs", "./Shaders/ocean.fs");
+  Shader skyboxShader("./Shaders/skybox.vs", "./Shaders/skybox.fs");
 
+  unsigned int skyboxTexture;
+  glGenTextures(1, &skyboxTexture);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
+  std::vector<std::string> faces = {
+    "./icebergs/right.jpg",
+    "./icebergs/left.jpg",
+    "./icebergs/top.jpg",
+    "./icebergs/bottom.jpg",
+    "./icebergs/front.jpg",
+    "./icebergs/back.jpg"
+  };
+
+  generateSkybox(&skyboxTexture, faces);
   generateGrid(vertices, indices, gridSize, spacing);
 
   // 綁定 VBO, VAO, EBO
@@ -61,6 +75,17 @@ int main() {
   glGenBuffers(1, &lightVBO);
   glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
   glBufferData(GL_ARRAY_BUFFER, lightCubeVertices.size()*sizeof(float), lightCubeVertices.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+
+  unsigned int skyboxVAO, skyboxVBO;
+  glGenVertexArrays(1, &skyboxVAO);
+  glBindVertexArray(skyboxVAO);
+  glGenBuffers(1, &skyboxVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+  glBufferData(GL_ARRAY_BUFFER, skyboxVertices.size()*sizeof(float), skyboxVertices.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -91,6 +116,22 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 設定清除顏色
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
+    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+    // 繪製天空盒
+    glDepthMask(GL_FALSE);
+    skyboxShader.use();
+    glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix())); // 移除平移部分
+    skyboxShader.setMat4("view", skyboxView);
+    skyboxShader.setMat4("projection", projection);
+    glBindVertexArray(skyboxVAO);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDepthMask(GL_TRUE);
+
+
     // 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
@@ -98,9 +139,6 @@ int main() {
     oceanShader.setVec4("oceanColor", glm::vec4(0.43f, 0.82f, 1.0f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
     oceanShader.setVec3("viewPos", camera.Position);
-
-    glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     unsigned int viewLoc = glGetUniformLocation(oceanShader.ID, "view");
     unsigned int projectionLoc = glGetUniformLocation(oceanShader.ID, "projection");

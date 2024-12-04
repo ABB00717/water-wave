@@ -13,5 +13,6 @@
 
 void generateTexture(unsigned int* texture, const char* imgPath);
 void generateGrid(std::vector<float>& vertices, std::vector<unsigned int>& indices, int gridSize, float spacing);
+void generateSkybox(unsigned int* texture, std::vector<std::string> faces);
 
 #endif

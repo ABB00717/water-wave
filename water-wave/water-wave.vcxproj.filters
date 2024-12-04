@@ -13,8 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\icebergs">
+      <UniqueIdentifier>{fbef4050-2290-4802-8ce4-090a858c5bf4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{7ec73468-c548-4110-abb2-5018140705c0}</UniqueIdentifier>
+      <UniqueIdentifier>{a4e65db1-03d5-42f1-8a6b-702c7b5be4f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -35,20 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ocean.fs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="ocean.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="light.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="light.fs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -64,5 +53,45 @@
     <ClInclude Include="Generates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icebergs\back.jpg">
+      <Filter>Resource Files\icebergs</Filter>
+    </Image>
+    <Image Include="icebergs\bottom.jpg">
+      <Filter>Resource Files\icebergs</Filter>
+    </Image>
+    <Image Include="icebergs\front.jpg">
+      <Filter>Resource Files\icebergs</Filter>
+    </Image>
+    <Image Include="icebergs\left.jpg">
+      <Filter>Resource Files\icebergs</Filter>
+    </Image>
+    <Image Include="icebergs\right.jpg">
+      <Filter>Resource Files\icebergs</Filter>
+    </Image>
+    <Image Include="icebergs\top.jpg">
+      <Filter>Resource Files\icebergs</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\light.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\light.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\ocean.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\ocean.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\skybox.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\skybox.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
