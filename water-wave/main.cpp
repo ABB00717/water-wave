@@ -99,6 +99,7 @@ int main() {
     // 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
+    oceanShader.setFloat("waveLength", 10.0f);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
     oceanShader.setVec4("oceanColor", glm::vec4(0.30f, 0.51f, 0.66f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
