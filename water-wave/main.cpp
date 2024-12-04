@@ -58,6 +58,8 @@ int main() {
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 330");
 
+  float waveLength = 10.0f, steepness = 0.5;
+  glm::vec2 waveDirection = glm::vec2(1.0, 1.0);
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // 設定視口大小
   glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback); // 設定視窗大小改變時的callback
   while (!glfwWindowShouldClose(window)) {
@@ -97,6 +99,9 @@ int main() {
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
     oceanShader.setVec4("oceanColor", glm::vec4(0.43f, 0.82f, 1.0f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
+    oceanShader.setFloat("waveLength", waveLength);
+    oceanShader.setFloat("steepness", steepness);
+    oceanShader.setVec2("waveDirection", waveDirection);
     oceanShader.setVec3("viewPos", camera.Position);
     unsigned int viewLoc = glGetUniformLocation(oceanShader.ID, "view");
     unsigned int projectionLoc = glGetUniformLocation(oceanShader.ID, "projection");
