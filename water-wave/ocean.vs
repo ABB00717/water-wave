@@ -19,7 +19,7 @@ void main() {
     modifiedPos.x += waveHeight * cos(f);
     modifiedPos.y = waveHeight * sin(f);
 
-    vec3 tangent = normalize(vec3(1.0, waveHeight * cos(f), 0.0));
+    vec3 tangent = normalize(vec3(1.0 - k * waveHeight * sin(f), k * waveHeight * cos(f), 0.0));
     vec3 normal = vec3(-tangent.y, tangent.x, 0.0);
     FragNormal = normal;
     FragPos = modifiedPos;
