@@ -9,13 +9,14 @@ out vec3 FragPos;
 out vec3 FragNormal;
 
 void main() {
-    float amplitude = 0.1;
-    float frequency = 3.0;
-    float speed = 2.0;
+    float amplitude = 0.8;
+    float frequency = 0.5;
+    float speed = 5.0;
 
     vec3 modifiedPos = aPos;
     float waveArg = (frequency * (aPos.x + aPos.z) + speed * time);
     float waveArgHehe = (frequency * (aPos.x) + speed * time);
+    modifiedPos.x += amplitude * sin(waveArgHehe);
 
     // modifiedPos.y += amplitude * sin(waveArg);
     // float dYdx = amplitude * frequency * cos(waveArg);
