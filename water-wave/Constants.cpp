@@ -7,7 +7,7 @@ const int SCREEN_HEIGHT = 800;
 // Grid settings
 std::vector<float> vertices = {};
 std::vector<unsigned int> indices = {};
-std::vector<float> lightCubeVertices = {
+const std::vector<float> lightCubeVertices = {
   -0.5f, -0.5f, -0.5f,
    0.5f, -0.5f, -0.5f,
    0.5f,  0.5f, -0.5f,
@@ -50,7 +50,7 @@ std::vector<float> lightCubeVertices = {
   -0.5f,  0.5f,  0.5f,
   -0.5f,  0.5f, -0.5f,
 };
-std::vector<float> skyboxVertices = {
+const std::vector<float> skyboxVertices = {
   -1.0f,  1.0f, -1.0f,
   -1.0f, -1.0f, -1.0f,
    1.0f, -1.0f, -1.0f,
@@ -93,6 +93,12 @@ std::vector<float> skyboxVertices = {
   -1.0f, -1.0f,  1.0f,
    1.0f, -1.0f,  1.0f
 };
+const std::vector<std::string> skyboxFaces = {
+    "./icebergs/right.jpg", "./icebergs/left.jpg",
+    "./icebergs/top.jpg", "./icebergs/bottom.jpg",
+    "./icebergs/front.jpg", "./icebergs/back.jpg"
+};
+
 int gridSize = 100;
 float spacing = 0.1f;
 

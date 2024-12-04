@@ -41,55 +41,15 @@ int main() {
   unsigned int skyboxTexture;
   glGenTextures(1, &skyboxTexture);
   glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
-  std::vector<std::string> faces = {
-    "./icebergs/right.jpg",
-    "./icebergs/left.jpg",
-    "./icebergs/top.jpg",
-    "./icebergs/bottom.jpg",
-    "./icebergs/front.jpg",
-    "./icebergs/back.jpg"
-  };
-
-  generateSkybox(&skyboxTexture, faces);
+  generateSkybox(&skyboxTexture, skyboxFaces);
   generateGrid(vertices, indices, gridSize, spacing);
 
-  // 綁定 VBO, VAO, EBO
-  unsigned int VBO, VAO, EBO;
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(float), vertices.data(), GL_STATIC_DRAW);
-  glGenBuffers(1, &EBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(unsigned int), indices.data(), GL_STREAM_DRAW);
-  // 告訴OpenGL如何解析頂點數據
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-
+  unsigned int oceanVAO, oceanVBO, oceanEBO;
+  generateBuffers(oceanVAO, oceanVBO, oceanEBO, vertices, indices);
   unsigned int lightVAO, lightVBO;
-  glGenVertexArrays(1, &lightVAO);
-  glBindVertexArray(lightVAO);
-  glGenBuffers(1, &lightVBO);
-  glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
-  glBufferData(GL_ARRAY_BUFFER, lightCubeVertices.size()*sizeof(float), lightCubeVertices.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-
+  generateBuffers(lightVAO, lightVBO, lightCubeVertices);
   unsigned int skyboxVAO, skyboxVBO;
-  glGenVertexArrays(1, &skyboxVAO);
-  glBindVertexArray(skyboxVAO);
-  glGenBuffers(1, &skyboxVBO);
-  glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-  glBufferData(GL_ARRAY_BUFFER, skyboxVertices.size()*sizeof(float), skyboxVertices.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  generateBuffers(skyboxVAO, skyboxVBO, skyboxVertices);
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -131,7 +91,6 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glDepthMask(GL_TRUE);
 
-
     // 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
@@ -147,7 +106,7 @@ int main() {
 
     // 繪製海洋
     glEnable(GL_DEPTH_TEST);
-    glBindVertexArray(VAO);
+    glBindVertexArray(oceanVAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
     // 繪製光源
