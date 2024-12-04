@@ -16,6 +16,7 @@ void main() {
     float f = k * (aPos.x - speed * time);
 
     vec3 modifiedPos = aPos;
+    modifiedPos.x += waveHeight * cos(f);
     modifiedPos.y = waveHeight * sin(f);
 
     vec3 tangent = normalize(vec3(1.0, waveHeight * cos(f), 0.0));
