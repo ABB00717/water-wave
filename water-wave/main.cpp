@@ -62,6 +62,20 @@ int main() {
   glm::vec2 waveDirection = glm::vec2(1.0, 1.0);
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // 設定視口大小
   glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback); // 設定視窗大小改變時的callback
+  // 初始化隨機數種子
+  srand(static_cast<unsigned>(time(0)));
+
+  glm::vec2 wave[3] = {
+    glm::vec2(3.0f, 0.2f),
+    glm::vec2(2.0f, 0.25f),
+    glm::vec2(2.0f, 0.1f)
+  };
+  glm::vec2 waveDir[3] = {
+    glm::vec2(0.1f, 0.2f),
+    glm::vec2(0.2f, 0.3f),
+    glm::vec2(0.3f, 0.1f)
+  };
+  
   while (!glfwWindowShouldClose(window)) {
     float cameraSpeed = 7.5f*deltaTime;
     float currentFrame = glfwGetTime();
@@ -93,22 +107,14 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glDepthMask(GL_TRUE);
 
-    glm::vec2 wave[2] = {
-      glm::vec2(1.0f, 0.1f),
-      glm::vec2(1.0f, 0.1f)
-    };
-    glm::vec2 waveDir[2] = {
-      glm::vec2(1.0f, 0.0f),
-      glm::vec2(0.3f, 0.3f)
-    };
     // 啟動著色器並綁定紋理
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
     oceanShader.setVec4("oceanColor", glm::vec4(0.3f, 0.51f, 0.66f, 1.0f));
     oceanShader.setVec3("lightPos", glm::vec3(5.0f, 2.0f, 5.0f));
-    oceanShader.setVec2Array("wave", 2, wave);
-    oceanShader.setVec2Array("waveDir", 2, waveDir);
+    oceanShader.setVec2Array("wave", 3, wave);
+    oceanShader.setVec2Array("waveDir", 3, waveDir);
     //oceanShader.setFloat("waveLength", waveLength);
     //oceanShader.setFloat("steepness", steepness);
     //oceanShader.setVec2("waveDirection", waveDirection);

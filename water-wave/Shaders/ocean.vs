@@ -1,7 +1,7 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 
-#define NUM_WAVE 2
+#define NUM_WAVE 3
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -47,7 +47,7 @@ void main() {
       ));
       
       // 計算法向量
-      totalNormal += cross(tangent, binormal);
+      totalNormal += cross(tangent, binormal) * wave[i][1];
     }
     
     FragNormal = normalize(totalNormal);
