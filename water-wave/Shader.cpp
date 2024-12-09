@@ -91,6 +91,14 @@ void Shader::setVec2(const std::string& name, glm::vec2 value) const {
   glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
 }
 
+void Shader::setFloatArray(const std::string& name, int count, const float* value) const {
+  glUniform1fv(glGetUniformLocation(ID, name.c_str()), count, value);
+}
+
+void Shader::setVec2Array(const std::string& name, int count, const float* value) const {
+  glUniform2fv(glGetUniformLocation(ID, name.c_str()), count, value);
+}
+
 void Shader::checkCompileErrors(unsigned int shader, std::string type) {
   int success;
   char infoLog[1024];

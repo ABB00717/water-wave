@@ -11,8 +11,8 @@ uniform vec4 oceanColor;
 uniform vec4 lightColor;
 
 void main() {
-    vec3 norm = normalize(FragNormal);
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 norm = FragNormal;
+    vec3 lightDir = normalize(FragPos - lightPos);
 
     // 漫反射
     float diff = max(dot(norm, lightDir), 0.0);
@@ -25,7 +25,7 @@ void main() {
     // 鏡面反射
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = 0.4 * pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
     vec4 specular = spec * lightColor;
 
     // 折射
@@ -40,5 +40,5 @@ void main() {
 
     // 混合折射、反射與光照
     vec4 baseColor = ambient + diffuse + specular;
-    FragColor = mix(refractedColor, reflectedColor, 0.7) * oceanColor * 0.7 + baseColor * 0.3;
+    FragColor = mix(refractedColor, reflectedColor, 0.3) * oceanColor * 0.7 + baseColor * 0.3;
 }

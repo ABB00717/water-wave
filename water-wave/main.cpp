@@ -58,7 +58,7 @@ int main() {
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 330");
 
-  float waveLength = 10.0f, steepness = 0.5;
+  float waveLength = 3.0f, steepness = 0.2;
   glm::vec2 waveDirection = glm::vec2(1.0, 1.0);
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); // 設定視口大小
   glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback); // 設定視窗大小改變時的callback
@@ -75,7 +75,7 @@ int main() {
 
     // 渲染指令
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 線框模式
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 設定清除顏色
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 設定清除顏色
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // 清除顏色緩衝
 
     glm::mat4 view = camera.GetViewMatrix();
@@ -97,8 +97,8 @@ int main() {
     oceanShader.use();
     oceanShader.setFloat("time", currentFrame);
     oceanShader.setVec4("lightColor", glm::vec4(1.0f));
-    oceanShader.setVec4("oceanColor", glm::vec4(0.43f, 0.82f, 1.0f, 1.0f));
-    oceanShader.setVec3("lightPos", glm::vec3(0.0f, 5.0f, 0.0f));
+    oceanShader.setVec4("oceanColor", glm::vec4(0.3f, 0.51f, 0.66f, 1.0f));
+    oceanShader.setVec3("lightPos", glm::vec3(5.0f, 2.0f, 5.0f));
     oceanShader.setFloat("waveLength", waveLength);
     oceanShader.setFloat("steepness", steepness);
     oceanShader.setVec2("waveDirection", waveDirection);
@@ -116,7 +116,7 @@ int main() {
     // 繪製光源
     lightShader.use();
     glm::mat4 lightModel = glm::mat4(1.0f); // 初始化單位矩陣
-    lightModel = glm::translate(lightModel, glm::vec3(0.0f, 5.0f, 0.0f)); // 平移到 (5.0f, 10.0f, 5.0f)
+    lightModel = glm::translate(lightModel, glm::vec3(5.0f, 2.0f, 5.0f)); // 平移到 (5.0f, 10.0f, 5.0f)
     lightModel = glm::scale(lightModel, glm::vec3(0.2f)); // 可選：縮小光源以區分光源立方體
     lightShader.setMat4("model", lightModel);
     lightShader.setMat4("view", view);

@@ -25,11 +25,26 @@ void main() {
     vec3 modifiedPos = aPos;
     modifiedPos.x += a * d.x * cos(f);       // 在 x 軸方向的位移
     modifiedPos.z += a * d.y * cos(f);       // 在 z 軸方向的位移
-    modifiedPos.y += a * sin(f);             // 在 y 軸方向的位移（高度）
+    modifiedPos.y = a * sin(f);             // 在 y 軸方向的位移（高度）
 
     // 計算切線和法向量
-    vec3 tangent = normalize(vec3(1.0 - steepness * d.x * sin(f), steepness * cos(f), -steepness * d.y * sin(f)));
-    vec3 normal = normalize(vec3(-tangent.y, tangent.x, tangent.z)); // 法向量
+    // 計算切線向量
+    vec3 tangent = normalize(vec3(
+        1.0 - steepness * d.x * d.x * sin(f),
+        d.x * steepness * cos(f),
+        -d.x * steepness * d.y * sin(f)
+    ));
+    
+    // 計算雙切線 (Binormal)
+    vec3 binormal = normalize(vec3(
+        -d.x * d.y * (steepness * sin(f)),
+        d.y * (steepness * cos(f)),
+        1.0 - d.y * d.y * (steepness * sin(f))
+    ));
+    
+    // 計算法向量
+    vec3 normal = normalize(cross(tangent, binormal));
+    
     FragNormal = normal;
     FragPos = modifiedPos;
 
