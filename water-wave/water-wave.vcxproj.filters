@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\icebergs">
-      <UniqueIdentifier>{fbef4050-2290-4802-8ce4-090a858c5bf4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{a4e65db1-03d5-42f1-8a6b-702c7b5be4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\field">
+      <UniqueIdentifier>{fbef4050-2290-4802-8ce4-090a858c5bf4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,22 +56,22 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="icebergs\back.jpg">
-      <Filter>Resource Files\icebergs</Filter>
+      <Filter>Resource Files\field</Filter>
     </Image>
     <Image Include="icebergs\bottom.jpg">
-      <Filter>Resource Files\icebergs</Filter>
+      <Filter>Resource Files\field</Filter>
     </Image>
     <Image Include="icebergs\front.jpg">
-      <Filter>Resource Files\icebergs</Filter>
+      <Filter>Resource Files\field</Filter>
     </Image>
     <Image Include="icebergs\left.jpg">
-      <Filter>Resource Files\icebergs</Filter>
+      <Filter>Resource Files\field</Filter>
     </Image>
     <Image Include="icebergs\right.jpg">
-      <Filter>Resource Files\icebergs</Filter>
+      <Filter>Resource Files\field</Filter>
     </Image>
     <Image Include="icebergs\top.jpg">
-      <Filter>Resource Files\icebergs</Filter>
+      <Filter>Resource Files\field</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

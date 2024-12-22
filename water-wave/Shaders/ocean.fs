@@ -30,7 +30,7 @@ void main() {
 
     // 折射
     float ratio = 1.00 / 1.33; // 空氣到水的折射率
-    vec3 I = normalize(FragPos - viewPos);
+    vec3 I = normalize(viewPos - FragPos);
     vec3 refractDir = refract(I, norm, ratio); // 計算折射方向
     vec4 refractedColor = vec4(texture(skybox, refractDir).rgb, 1.0);
 
@@ -40,5 +40,5 @@ void main() {
 
     // 混合折射、反射與光照
     vec4 baseColor = ambient + diffuse + specular;
-    FragColor = mix(refractedColor, reflectedColor, 0.3) * oceanColor * 0.7 + baseColor * 0.3;
+    FragColor = mix(refractedColor, reflectedColor, 0.5) * oceanColor * 0.7 + baseColor * 0.3;
 }

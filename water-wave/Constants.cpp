@@ -94,9 +94,9 @@ const std::vector<float> skyboxVertices = {
    1.0f, -1.0f,  1.0f
 };
 const std::vector<std::string> skyboxFaces = {
-    "./icebergs/right.jpg", "./icebergs/left.jpg",
-    "./icebergs/top.jpg", "./icebergs/bottom.jpg",
-    "./icebergs/front.jpg", "./icebergs/back.jpg"
+    "./field/right.jpg", "./field/left.jpg",
+    "./field/top.jpg", "./field/bottom.jpg",
+    "./field/front.jpg", "./field/back.jpg"
 };
 
 int gridSize = 100;
